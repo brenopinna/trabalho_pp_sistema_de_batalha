@@ -43,7 +43,7 @@ javac -d class src/*.java src/**/*.java # compila tudo de src para o diretorio c
 java -classpath class Main # roda o sistema
 ```
 
-## Apagando os arquios binários:
+## Apagando os arquivos binários:
 
 ```bash
 rm -rf class
