@@ -1,0 +1,174 @@
+@startuml Jogo
+
+top to bottom direction
+
+package jogo{
+  class Jogo {
+    - jogadorUm: Entidade
+    - jogadorDois: Entidade
+    - jogadorDaRodada: Entidade
+    - jogadorAlvo: Entidade
+    - doisJogadores: boolean
+    - classes{static}: ArrayList<Class<? extends Entidade>>
+
+    -adicionarClasses(): void
+    -iniciarJogo(): boolean
+    -escolherUmOuDoisJogadores(): void
+    -escolherClasse(): Entidade
+    -instanciarClasseAleatoria(): Entidade
+    -instanciarClasse(indiceDaClasse: int): Entidade
+    -iniciarNovaRodada(): boolean
+    -escolherAcaoJogador(): void 
+    -executarAcaoNPC(): void
+    -imprimirAtributosEntidade(e: Entidade): void
+    -imprimirAtributosJogadores(): void
+    -trocarJogadorDaRodada(): void
+    -retornarNomesClasses(): String[]
+  }
+}
+
+package menu {
+  class Menu <<utility>> {
+    +final sc{static}: Scanner;
+
+    +limparTerminal(){static}: void 
+    -imprimirSinalInput(){static}: void
+    +aguardarEnter(){static}: void
+    +imprimirTitulo(texto: String) {static}: void
+    -imprimirMenu(strings: List<String>) {static}: void
+    -imprimirMenu(strings: String[]){static}: void
+    +lerOpcao(opcoes: List<String>){static}: int
+    +lerOpcao(opcoes: String[]){static}: int
+    -lerOpcao(){static}: int
+  }
+}
+
+package dano {
+  enum TipoDano  {
+    FISICO
+    MAGICO
+    PROJETIL
+    +toString(): String <<override>>
+  }
+
+  class Dano {
+      -base: int
+      -atual: int
+      -tipo: TipoDano
+      +getQuantidade(): int
+      +setQuantidade(quantidade: int): void
+      +getTipo(): TipoDano
+      +toString(): String <<override>> 
+  }
+}
+
+package entidades {
+  abstract class Entidade {
+      -dano: Dano
+      -vida: int
+      -vidaInicial: int
+      -resistencias: ArrayList<TipoDano>
+      -esquiva: double
+      -precisao: double
+      -acoes: ArrayList<Acao>
+
+      +getVida(): int
+      +setVida(dano: Dano): int
+      +setVida(aumento: int): void
+      +getDano() :Dano
+      +setDano(quantidade: int): void
+      #getEsquiva(): double
+      #setEsquiva(diminuicao: double): void
+      #getPrecisao(): double
+      #setPrecisao(diminuicao: double): void
+      +getTamanhoAcoes(): int
+      +getStringsAcoes(): ArrayList<String>
+      +getStringAtributos(): String
+      +checarVivo(): boolean
+      +executarAcao(nomeDoExecutor: String, indiceAcao: int, alvo: Entidade): void
+      +executarAcaoAleatoria(nomeDoExecutor: String, alvo: Entidade): void
+      #testarAtaque(alvo: Entidade): boolean
+      #causarDano(alvo: Entidade): boolean
+      #receberDano(dano: Dano): void
+      #adicionarAcao(acao: Acao): void
+      #adicionarAcoes(){abstract}: void
+  }
+
+  abstract class Atirador {
+      -projeteis: int
+      -projeteisIniciais: int
+
+      -recarregar(): boolean
+      +causarDano(alvo: Entidade): boolean
+      +getStringAtributos(): String <<override>>
+  }
+
+  class Arqueiro {}
+
+  class Pistoleiro {}
+
+  abstract class Mistico {
+      -mana: int
+      -manaInicial: int
+
+      -recuperarMana(): boolean
+      #gastarMana(quantidade: int): boolean
+      #testarMagia(): boolean
+      +getStringAtributos(): String <<override>>
+  }
+
+  class Feiticeiro {
+      -cegar(alvo: Entidade): boolean
+      +adicionarAcoes(): void <<override>>
+  }
+
+  class Curandeiro {
+      -curar(): boolean
+      +adicionarAcoes(): void <<override>>
+  }
+
+  class Berserk {
+      -raiva: double
+      +receberDano(dano: Dano): void <<override>>
+      -incrementarRaiva(danoRecebido: int): void
+      +getStringAtributos(): String <<override>>
+  }
+}
+
+package acao {
+ interface IAcao <<functional interface>>
+
+  class Acao {
+    -acao: IAcao
+    -stringAcao: String
+    +executa(a: Entidade): boolean
+    +getAcao(): IAcao
+    +toString(): string <<override>>
+  }
+
+}
+
+'Heranca
+Entidade <|-- Mistico
+Entidade <|-- Atirador
+Entidade <|-- Berserk
+Mistico <|-- Feiticeiro
+Mistico <|-- Curandeiro
+Atirador <|-- Arqueiro
+Atirador <|-- Pistoleiro
+
+'Associacao
+Dano "1" --> "1" TipoDano : tipo
+Jogo "1" --> "1" Entidade : jogador
+Jogo "1" --> "1" Entidade : inimigo
+Entidade "1" -right-> "*" Acao : realiza
+Entidade "1" -left-> "1" Dano : danoCausado
+Entidade "1" --> "*" TipoDano : resiste a
+
+'Implementacao
+IAcao <|.up. Acao
+
+'Dependencia
+Jogo .> Menu: usa
+
+@enduml
