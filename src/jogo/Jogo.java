@@ -1,6 +1,7 @@
 package jogo;
 
 import java.util.ArrayList;
+import java.util.function.Function;
 
 import entidades.Arqueiro;
 import entidades.Berserk;
@@ -111,6 +112,59 @@ public class Jogo {
     }
   }
 
+  private String fraseDeVitoria(Entidade vencedor) {
+    // uma interface funcional de java para ter uma funcao auxiliar local
+    Function<String[], String> fraseAleatoria = lista_str -> lista_str[(int) Math
+        .floor(lista_str.length * Math.random())];
+
+    String[] frasesVitoriaJogadorUm = {
+        "O oponente caiu tão rápido que nem valeu aquecimento.",
+        "Parecia um duelo, mas foi só um treino com saco de pancadas.",
+        "Seu adversário lutou com coragem. Faltou só o resto.",
+        "Se fosse uma competição de tropeço, ele ainda perderia.",
+        "A vitória veio tão fácil que deu tempo de arrumar a armadura no meio da luta.",
+        "Derrotou o inimigo com tanta classe que quase pareceu nobreza.",
+        "O chão conheceu bem o rosto do seu adversário hoje.",
+        "Ninguém esperava equilíbrio, mas isso aí foi massacre.",
+        "A única coisa afiada no inimigo era o grito de socorro.",
+        "Seu golpe final foi tão preciso que parecia rotina."
+    };
+
+    String[] frasesVitoriaJogadorDois = {
+        "O oponente caiu sem nem entender de onde veio o golpe.",
+        "Foi uma vitória limpa, rápida e cheia de vergonha pro lado perdedor.",
+        "O inimigo tentou resistir... tentou, né.",
+        "Parecia que o adversário tava ali só pra garantir o espetáculo.",
+        "Derrotou com tanta firmeza que o eco do impacto vai assombrar o campo por dias.",
+        "Ninguém saiu ileso, mas só um saiu de pé.",
+        "A luta terminou e o silêncio do inimigo disse tudo.",
+        "O adversário foi tão inútil quanto escudo de madeira podre.",
+        "Foi mais um exemplo de como *não* se luta.",
+        "O inimigo agora é parte da paisagem do campo de batalha."
+    };
+
+    String[] frasesDerrotaParaNPC = {
+        "Parabéns, conseguiu perder pra algo que nem pensa direito.",
+        "A criatura nem teve trabalho. Você caiu sozinho.",
+        "Até a sombra do monstro te intimidou mais do que deveria.",
+        "Derrota honesta, mas ainda assim ridícula.",
+        "O inimigo tava mais perdido que você, e mesmo assim venceu.",
+        "Você caiu pra uma ameaça que mal se move. Incrível.",
+        "Dizem que essa criatura é fraca... agora dizem menos.",
+        "A luta foi curta. A vergonha, eterna.",
+        "O NPC vai usar sua cabeça como troféu de treino.",
+        "Perder pra esse tipo de inimigo devia dar multa."
+    };
+
+    if (vencedor == this.jogadorUm) {
+      return fraseAleatoria.apply(frasesVitoriaJogadorUm);
+    } else if (vencedor == this.jogadorDois) {
+      return fraseAleatoria.apply(frasesVitoriaJogadorDois);
+    } else {
+      return fraseAleatoria.apply(frasesDerrotaParaNPC);
+    }
+  }
+
   private boolean iniciarNovaRodada() {
     imprimirTitulo(
         "VEZ DO " + ((this.jogadorDaRodada == this.jogadorUm) ? "JOGADOR 1"
@@ -124,17 +178,7 @@ public class Jogo {
     // possivel o jogador sofrer dano na rodada em que ele realiza a acao, entao
     // essa simplificacao eh possivel aqui.
     if (!this.jogadorAlvo.checarVivo()) {
-      if (this.jogadorDaRodada == this.jogadorUm) {
-        // TODO: criar um algoritmo para frases de vitoria aleatorias
-        System.out.println("O jogador um conquista a glória e derrota brutalmente seu adversário fraco!");
-      } else {
-        if (this.doisJogadores)
-          System.out.println(
-              "O jogador dois esfrega a cara de seu adversário na lama e segue em frente pelo campo de batalha.");
-        else {
-          System.out.println("Ai... perder pro computador é osso... Vê se melhora aí mano.");
-        }
-      }
+      System.out.println(fraseDeVitoria(this.jogadorDaRodada));
       return false;
     }
     trocarJogadorDaRodada();

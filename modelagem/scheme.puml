@@ -17,6 +17,7 @@ package jogo{
     -escolherClasse(): Entidade
     -instanciarClasseAleatoria(): Entidade
     -instanciarClasse(indiceDaClasse: int): Entidade
+    -fraseDeVitoria(vencedor: Entidade): String
     -iniciarNovaRodada(): boolean
     -escolherAcaoJogador(): void 
     -executarAcaoNPC(): void
