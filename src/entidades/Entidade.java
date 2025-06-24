@@ -47,7 +47,7 @@ abstract public class Entidade {
     this.precisao = Math.max(0.1, Math.min(0.9, precisao));
     this.resistencias = resistencias;
     this.acoes = new ArrayList<Acao>();
-    acoes.add(new Acao(e -> this.causarDano(e), "Atacar"));
+    this.adicionarAcao(new Acao(e -> this.causarDano(e), "Atacar"));
     adicionarAcoes();
   }
 
