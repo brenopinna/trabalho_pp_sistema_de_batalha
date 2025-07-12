@@ -31,6 +31,7 @@ public class Jogo {
       System.out.println("Erro no sistema. Reinicie e tente novamente.");
   }
 
+  // TODO: separar o pacote entidades em jogo e usuario pra automatizar isso aqui
   private void adicionarClasses() {
     Jogo.classes.add(Berserk.class);
     Jogo.classes.add(Feiticeiro.class);
